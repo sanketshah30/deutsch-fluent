@@ -1,0 +1,106 @@
+import { Scenario } from '@/types/scenario';
+
+export const scenarios: Scenario[] = [
+  {
+    id: 'small-talk',
+    title: 'Small Talk mit Kollegen',
+    titleEn: 'Small talk with colleagues',
+    description: 'Üben Sie informelle Gespräche in der Kaffeepause',
+    icon: '☕',
+    difficulty: 'Anfänger',
+    formality: 'Du',
+    context: 'Du bist in der Kaffeepause. Deine Kollegin Anna kommt zu dir...',
+    prompts: [
+      {
+        id: 'st-1',
+        german: 'Wie war dein Wochenende?',
+        english: 'How was your weekend?',
+        keywords: ['gut', 'schön', 'toll', 'super', 'wochenende', 'samstag', 'sonntag', 'entspannt', 'interessant'],
+        suggestedResponse: 'Es war toll! Ich habe am Samstag gewandert und am Sonntag entspannt. Und deins?',
+      },
+      {
+        id: 'st-2',
+        german: 'Wie geht es dir heute?',
+        english: 'How are you today?',
+        keywords: ['gut', 'super', 'müde', 'okay', 'besser', 'danke', 'dir'],
+        suggestedResponse: 'Mir geht es gut, danke! Ein bisschen müde, aber der Kaffee hilft. Und dir?',
+      },
+    ],
+  },
+  {
+    id: 'explain-task',
+    title: 'Aufgabe erklären',
+    titleEn: 'Explaining a task',
+    description: 'Erklären Sie einem Kollegen eine Aufgabe',
+    icon: '📋',
+    difficulty: 'Fortgeschritten',
+    formality: 'Sie',
+    context: 'Sie sind in einem Meeting. Ihr neuer Kollege Herr Müller bittet Sie um Hilfe bei einem Projekt...',
+    prompts: [
+      {
+        id: 'et-1',
+        german: 'Könnten Sie mir bitte erklären, wie dieses System funktioniert?',
+        english: 'Could you please explain how this system works?',
+        keywords: ['zuerst', 'dann', 'danach', 'system', 'klicken', 'öffnen', 'eingeben', 'speichern'],
+        suggestedResponse: 'Natürlich! Zuerst öffnen Sie das Programm, dann klicken Sie auf "Neu" und geben Sie die Daten ein. Zum Schluss speichern Sie alles.',
+      },
+    ],
+  },
+  {
+    id: 'answer-question',
+    title: 'Frage beantworten',
+    titleEn: 'Answering questions',
+    description: 'Beantworten Sie Fragen Ihres Vorgesetzten',
+    icon: '💬',
+    difficulty: 'Fortgeschritten',
+    formality: 'Sie',
+    context: 'Sie sind im Büro. Ihre Chefin Frau Schmidt fragt Sie nach dem Projektfortschritt...',
+    prompts: [
+      {
+        id: 'aq-1',
+        german: 'Wie weit sind Sie mit dem Projekt?',
+        english: 'How far along are you with the project?',
+        keywords: ['fertig', 'prozent', 'fortschritt', 'arbeite', 'woche', 'fast', 'plan', 'gut'],
+        suggestedResponse: 'Das Projekt ist zu etwa 80% fertig. Wir sind gut im Zeitplan und werden nächste Woche abschließen.',
+      },
+    ],
+  },
+  {
+    id: 'ask-help',
+    title: 'Um Hilfe bitten',
+    titleEn: 'Asking for help',
+    description: 'Bitten Sie höflich um Unterstützung',
+    icon: '🤝',
+    difficulty: 'Anfänger',
+    formality: 'Sie',
+    context: 'Sie haben ein Problem mit Ihrem Computer. Ihr IT-Kollege Thomas geht gerade vorbei...',
+    prompts: [
+      {
+        id: 'ah-1',
+        german: 'Kann ich Ihnen helfen?',
+        english: 'Can I help you?',
+        keywords: ['problem', 'computer', 'hilfe', 'funktioniert', 'bitte', 'könnten', 'würden', 'zeit'],
+        suggestedResponse: 'Ja bitte! Mein Computer funktioniert nicht richtig. Hätten Sie kurz Zeit, sich das anzuschauen?',
+      },
+    ],
+  },
+  {
+    id: 'introduce-yourself',
+    title: 'Sich vorstellen',
+    titleEn: 'Introducing yourself',
+    description: 'Stellen Sie sich am ersten Arbeitstag vor',
+    icon: '👋',
+    difficulty: 'Anfänger',
+    formality: 'Sie',
+    context: 'Es ist Ihr erster Tag im neuen Job. Ihr Teamleiter stellt Sie dem Team vor und jemand fragt...',
+    prompts: [
+      {
+        id: 'iy-1',
+        german: 'Freut mich, Sie kennenzulernen! Erzählen Sie uns ein bisschen über sich.',
+        english: 'Nice to meet you! Tell us a bit about yourself.',
+        keywords: ['name', 'komme', 'aus', 'arbeite', 'freue', 'erfahrung', 'studiert', 'team'],
+        suggestedResponse: 'Freut mich auch! Ich bin [Name] und komme aus [Stadt]. Ich habe [X] Jahre Erfahrung in [Bereich] und freue mich sehr, Teil des Teams zu sein.',
+      },
+    ],
+  },
+];
