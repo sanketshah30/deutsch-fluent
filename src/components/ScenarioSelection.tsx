@@ -3,6 +3,7 @@ import { useProgress } from '@/hooks/useProgress';
 import { ScenarioCard } from '@/components/ScenarioCard';
 import { Button } from '@/components/ui/button';
 import { GermanStripe } from '@/components/GermanStripe';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Scenario } from '@/types/scenario';
 import { ArrowLeft, BarChart3 } from 'lucide-react';
 
@@ -18,6 +19,7 @@ export function ScenarioSelection({
   onViewProgress 
 }: ScenarioSelectionProps) {
   const { progress, getScenarioScore } = useProgress();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,7 +34,7 @@ export function ScenarioSelection({
             onClick={onBack}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('scenarios.back')}
           </Button>
           
           <Button 
@@ -41,22 +43,22 @@ export function ScenarioSelection({
             onClick={onViewProgress}
           >
             <BarChart3 className="h-4 w-4" />
-            Progress
+            {t('scenarios.progress')}
           </Button>
         </div>
 
         {/* Title */}
         <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-3xl font-serif font-bold text-foreground mb-2">
-            Choose a Scenario
+            {t('scenarios.title')}
           </h1>
           <p className="text-muted-foreground">
-            Select a workplace situation to practice
+            {t('scenarios.subtitle')}
           </p>
           
           {progress.completedScenarios.length > 0 && (
             <p className="text-sm text-primary mt-2">
-              {progress.completedScenarios.length} of {scenarios.length} completed
+              {progress.completedScenarios.length} {t('scenarios.of')} {scenarios.length} {t('scenarios.completed')}
             </p>
           )}
         </div>

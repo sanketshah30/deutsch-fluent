@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Scenario, FeedbackData } from '@/types/scenario';
 import { useProgress } from '@/hooks/useProgress';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { generateFeedback } from '@/utils/feedback';
 import { VoiceRecorder } from '@/components/VoiceRecorder';
 import { FeedbackDisplay } from '@/components/FeedbackDisplay';
@@ -21,6 +22,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const { addResponse } = useProgress();
+  const { t } = useLanguage();
 
   const currentPrompt = scenario.prompts[currentPromptIndex];
 
@@ -72,7 +74,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
             onClick={onBack}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Scenarios
+            {t('practice.backToScenarios')}
           </Button>
 
           <h2 className="text-2xl font-serif font-bold text-foreground mb-6">
@@ -103,7 +105,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
             onClick={onBack}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('practice.back')}
           </Button>
           
           <Button 
@@ -112,7 +114,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
             onClick={onComplete}
           >
             <SkipForward className="h-4 w-4" />
-            Skip
+            {t('practice.skip')}
           </Button>
         </div>
 
@@ -124,7 +126,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
         {/* Context Banner */}
         <Card className="mb-6 border-primary/20 bg-primary/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground mb-1">Situation:</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('practice.situation')}</p>
             <p className="text-foreground">{scenario.context}</p>
           </CardContent>
         </Card>
@@ -156,7 +158,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
         <div className="space-y-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
           <div>
             <h3 className="text-lg font-semibold text-foreground mb-4 text-center">
-              Your Response
+              {t('practice.yourResponse')}
             </h3>
             <VoiceRecorder 
               transcript={response}
@@ -173,7 +175,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
             disabled={!response.trim()}
           >
             <Send className="h-4 w-4" />
-            Submit Response
+            {t('practice.submit')}
           </Button>
         </div>
       </div>
