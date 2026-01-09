@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { GermanStripe } from '@/components/GermanStripe';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, MessageCircle, Mic, Target } from 'lucide-react';
 
 interface LandingPageProps {
@@ -7,6 +8,8 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ onStart }: LandingPageProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col">
       <GermanStripe />
@@ -27,16 +30,15 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl font-serif font-bold text-foreground mb-4">
-            Deutsch Üben
+            {t('landing.title')}
           </h1>
           <p className="text-xl text-primary font-medium mb-6">
-            Workplace Conversation Practice
+            {t('landing.subtitle')}
           </p>
           
           {/* Description */}
           <p className="text-lg text-muted-foreground mb-10 max-w-lg mx-auto text-balance">
-            Perfect for professionals who can read German but need confidence speaking 
-            in workplace situations. Practice real scenarios, get instant feedback.
+            {t('landing.description')}
           </p>
 
           {/* CTA Button */}
@@ -46,7 +48,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
             className="gap-3 mb-12"
             onClick={onStart}
           >
-            Start Practice
+            {t('landing.cta')}
             <ArrowRight className="h-5 w-5" />
           </Button>
 
@@ -56,9 +58,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
                 <MessageCircle className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="font-semibold text-foreground mb-1">Real Scenarios</h3>
+              <h3 className="font-semibold text-foreground mb-1">{t('landing.feature1.title')}</h3>
               <p className="text-sm text-muted-foreground">
-                Practice conversations you'll actually have at work
+                {t('landing.feature1.desc')}
               </p>
             </div>
             
@@ -66,9 +68,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center mb-3">
                 <Mic className="h-5 w-5 text-accent" />
               </div>
-              <h3 className="font-semibold text-foreground mb-1">Voice Practice</h3>
+              <h3 className="font-semibold text-foreground mb-1">{t('landing.feature2.title')}</h3>
               <p className="text-sm text-muted-foreground">
-                Speak your responses for authentic practice
+                {t('landing.feature2.desc')}
               </p>
             </div>
             
@@ -76,9 +78,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
               <div className="h-10 w-10 rounded-lg bg-success/10 flex items-center justify-center mb-3">
                 <Target className="h-5 w-5 text-success" />
               </div>
-              <h3 className="font-semibold text-foreground mb-1">Instant Feedback</h3>
+              <h3 className="font-semibold text-foreground mb-1">{t('landing.feature3.title')}</h3>
               <p className="text-sm text-muted-foreground">
-                Get scores and suggestions to improve
+                {t('landing.feature3.desc')}
               </p>
             </div>
           </div>
@@ -86,7 +88,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
       </main>
 
       <footer className="py-6 text-center text-sm text-muted-foreground">
-        <p>Built for workplace communication confidence</p>
+        <p>{t('landing.footer')}</p>
       </footer>
     </div>
   );

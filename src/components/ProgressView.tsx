@@ -1,5 +1,6 @@
 import { useProgress } from '@/hooks/useProgress';
 import { scenarios } from '@/data/scenarios';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ interface ProgressViewProps {
 
 export function ProgressView({ onBack }: ProgressViewProps) {
   const { progress, getScenarioScore, getScenarioAttempts, resetProgress } = useProgress();
+  const { t } = useLanguage();
 
   const completedCount = progress.completedScenarios.length;
   const totalScenarios = scenarios.length;
@@ -28,11 +30,11 @@ export function ProgressView({ onBack }: ProgressViewProps) {
           onClick={onBack}
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Scenarios
+          {t('progress.back')}
         </Button>
 
         <h1 className="text-3xl font-serif font-bold text-foreground mb-8">
-          Your Progress
+          {t('progress.title')}
         </h1>
 
         {/* Stats Overview */}
@@ -43,7 +45,7 @@ export function ProgressView({ onBack }: ProgressViewProps) {
               <p className="text-3xl font-bold font-serif text-foreground">
                 {completedCount}/{totalScenarios}
               </p>
-              <p className="text-sm text-muted-foreground">Scenarios Completed</p>
+              <p className="text-sm text-muted-foreground">{t('progress.completed')}</p>
             </CardContent>
           </Card>
           
@@ -53,7 +55,7 @@ export function ProgressView({ onBack }: ProgressViewProps) {
               <p className="text-3xl font-bold font-serif text-foreground">
                 {averageScore}
               </p>
-              <p className="text-sm text-muted-foreground">Average Score</p>
+              <p className="text-sm text-muted-foreground">{t('progress.average')}</p>
             </CardContent>
           </Card>
         </div>
@@ -61,7 +63,7 @@ export function ProgressView({ onBack }: ProgressViewProps) {
         {/* Scenario List */}
         <Card className="border-border/50 mb-8">
           <CardHeader>
-            <CardTitle className="font-serif">Scenario Details</CardTitle>
+            <CardTitle className="font-serif">{t('progress.history')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {scenarios.map((scenario) => {
@@ -80,7 +82,7 @@ export function ProgressView({ onBack }: ProgressViewProps) {
                     <div>
                       <p className="font-medium text-foreground">{scenario.title}</p>
                       <p className="text-xs text-muted-foreground">
-                        {attempts > 0 ? `${attempts} attempt${attempts > 1 ? 's' : ''}` : 'Not attempted'}
+                        {attempts > 0 ? `${attempts} ${t('progress.attempts').toLowerCase()}` : t('progress.noHistory')}
                       </p>
                     </div>
                   </div>
@@ -91,7 +93,7 @@ export function ProgressView({ onBack }: ProgressViewProps) {
                         {score}/5
                       </Badge>
                     ) : (
-                      <Badge variant="outline">Not completed</Badge>
+                      <Badge variant="outline">-</Badge>
                     )}
                   </div>
                 </div>

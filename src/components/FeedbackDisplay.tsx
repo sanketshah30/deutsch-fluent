@@ -1,5 +1,6 @@
 import { FeedbackData } from '@/types/scenario';
 import { getScoreLabel } from '@/utils/feedback';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, AlertCircle, Lightbulb, RotateCcw, ArrowRight } from 'lucide-react';
@@ -18,6 +19,7 @@ export function FeedbackDisplay({
   onNextScenario 
 }: FeedbackDisplayProps) {
   const { label, color } = getScoreLabel(feedback.score);
+  const { t } = useLanguage();
   
   const scoreColors = {
     success: 'bg-success',
@@ -32,7 +34,7 @@ export function FeedbackDisplay({
       {/* Score Section */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg font-serif">Relevance Score</CardTitle>
+          <CardTitle className="text-lg font-serif">{t('feedback.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 mb-3">
@@ -51,7 +53,7 @@ export function FeedbackDisplay({
       {/* Your Response */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg font-serif">Your Response</CardTitle>
+          <CardTitle className="text-lg font-serif">{t('feedback.yourResponse')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-foreground bg-muted p-3 rounded-lg italic">
@@ -63,14 +65,14 @@ export function FeedbackDisplay({
       {/* Feedback Details */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg font-serif">Feedback</CardTitle>
+          <CardTitle className="text-lg font-serif">{t('feedback.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* What worked well */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-success">
               <CheckCircle2 className="h-4 w-4" />
-              <span className="font-medium text-sm">What worked well</span>
+              <span className="font-medium text-sm">{t('feedback.whatWorked')}</span>
             </div>
             <ul className="space-y-1 pl-6">
               {feedback.whatWorkedWell.map((point, index) => (
@@ -85,7 +87,7 @@ export function FeedbackDisplay({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-warning">
               <AlertCircle className="h-4 w-4" />
-              <span className="font-medium text-sm">Area to improve</span>
+              <span className="font-medium text-sm">{t('feedback.improvement')}</span>
             </div>
             <p className="text-sm text-muted-foreground pl-6">
               {feedback.areasToImprove}
@@ -96,7 +98,7 @@ export function FeedbackDisplay({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-primary">
               <Lightbulb className="h-4 w-4" />
-              <span className="font-medium text-sm">Suggested response</span>
+              <span className="font-medium text-sm">{t('feedback.suggested')}</span>
             </div>
             <p className="text-sm text-foreground pl-6 bg-primary/5 p-3 rounded-lg border border-primary/20">
               "{feedback.suggestedResponse}"
@@ -113,14 +115,14 @@ export function FeedbackDisplay({
           onClick={onTryAgain}
         >
           <RotateCcw className="h-4 w-4" />
-          Try Again
+          {t('feedback.tryAgain')}
         </Button>
         <Button 
           variant="hero" 
           className="flex-1 gap-2"
           onClick={onNextScenario}
         >
-          Next Scenario
+          {t('feedback.nextScenario')}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
