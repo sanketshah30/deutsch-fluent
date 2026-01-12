@@ -192,12 +192,31 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Button text */
+    /* Button text - white text on all buttons */
     .stButton > button {
-        color: #1e293b !important;
+        color: white !important;
+    }
+    
+    .stButton > button:not([kind="primary"]) {
+        background-color: #1e293b !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    .stButton > button:not([kind="primary"]):hover {
+        background-color: #334155 !important;
+        color: white !important;
     }
     
     .stButton > button[kind="primary"] {
+        color: white !important;
+    }
+    
+    .stButton > button[kind="primary"]:hover {
+        color: white !important;
+    }
+    
+    /* Button text content */
+    .stButton > button span, .stButton > button div, .stButton > button p {
         color: white !important;
     }
     
