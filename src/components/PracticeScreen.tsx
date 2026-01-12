@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Scenario, FeedbackData } from '@/types/scenario';
 import { useProgress } from '@/hooks/useProgress';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { generateFeedback } from '@/utils/feedback';
-import { VoiceRecorder } from '@/components/VoiceRecorder';
+import { ChatInput } from '@/components/ChatInput';
+import { ChatBubble } from '@/components/ChatBubble';
 import { FeedbackDisplay } from '@/components/FeedbackDisplay';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { GermanStripe } from '@/components/GermanStripe';
-import { ArrowLeft, Send, SkipForward, Volume2 } from 'lucide-react';
+import { ArrowLeft, SkipForward } from 'lucide-react';
 
 interface PracticeScreenProps {
   scenario: Scenario;
@@ -16,51 +16,101 @@ interface PracticeScreenProps {
   onComplete: () => void;
 }
 
+interface ChatMessage {
+  id: string;
+  type: 'prompt' | 'user' | 'context';
+  german: string;
+  english?: string;
+}
+
 export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenProps) {
   const [currentPromptIndex] = useState(0);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [response, setResponse] = useState('');
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const { addResponse } = useProgress();
   const { t } = useLanguage();
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const currentPrompt = scenario.prompts[currentPromptIndex];
 
-  const handleSubmit = () => {
-    if (!response.trim()) return;
+  // Initialize chat with context and first prompt
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'context',
+        type: 'context',
+        german: scenario.context,
+        english: undefined,
+      },
+      {
+        id: currentPrompt.id,
+        type: 'prompt',
+        german: currentPrompt.german,
+        english: currentPrompt.english,
+      },
+    ]);
+  }, [scenario, currentPrompt]);
 
-    const generatedFeedback = generateFeedback(response, currentPrompt, scenario);
-    setFeedback(generatedFeedback);
-    setShowFeedback(true);
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-    // Save to progress
-    addResponse({
-      scenarioId: scenario.id,
-      promptId: currentPrompt.id,
-      response: response.trim(),
-      score: generatedFeedback.score,
-      timestamp: Date.now(),
-      attempts: 1,
-    });
+  const handleSend = (message: string) => {
+    if (!message.trim()) return;
+
+    // Add user message to chat
+    setMessages(prev => [...prev, {
+      id: `user-${Date.now()}`,
+      type: 'user',
+      german: message,
+    }]);
+
+    setResponse(message);
+
+    // Generate feedback after a short delay
+    setTimeout(() => {
+      const generatedFeedback = generateFeedback(message, currentPrompt, scenario);
+      setFeedback(generatedFeedback);
+      setShowFeedback(true);
+
+      // Save to progress
+      addResponse({
+        scenarioId: scenario.id,
+        promptId: currentPrompt.id,
+        response: message.trim(),
+        score: generatedFeedback.score,
+        timestamp: Date.now(),
+        attempts: 1,
+      });
+    }, 300);
   };
 
   const handleTryAgain = () => {
     setResponse('');
     setFeedback(null);
     setShowFeedback(false);
+    // Reset to initial messages
+    setMessages([
+      {
+        id: 'context',
+        type: 'context',
+        german: scenario.context,
+        english: undefined,
+      },
+      {
+        id: currentPrompt.id,
+        type: 'prompt',
+        german: currentPrompt.german,
+        english: currentPrompt.english,
+      },
+    ]);
   };
 
   const handleNextScenario = () => {
     onComplete();
-  };
-
-  const handleSpeak = () => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(currentPrompt.german);
-      utterance.lang = 'de-DE';
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
-    }
   };
 
   if (showFeedback && feedback) {
@@ -93,90 +143,76 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <GermanStripe />
       
-      <div className="container max-w-2xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button 
-            variant="ghost" 
-            className="gap-2"
-            onClick={onBack}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t('practice.back')}
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            className="gap-2 text-muted-foreground"
-            onClick={onComplete}
-          >
-            <SkipForward className="h-4 w-4" />
-            {t('practice.skip')}
-          </Button>
-        </div>
-
-        {/* Scenario Title */}
-        <h2 className="text-2xl font-serif font-bold text-foreground mb-6 animate-fade-in">
-          {scenario.title}
-        </h2>
-
-        {/* Context Banner */}
-        <Card className="mb-6 border-primary/20 bg-primary/5 animate-fade-in" style={{ animationDelay: '100ms' }}>
-          <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground mb-1">{t('practice.situation')}</p>
-            <p className="text-foreground">{scenario.context}</p>
-          </CardContent>
-        </Card>
-
-        {/* Prompt */}
-        <div className="mb-8 animate-fade-in" style={{ animationDelay: '200ms' }}>
-          <div className="flex items-start gap-4 p-6 bg-card rounded-xl border border-border/50 shadow-sm">
-            <div className="flex-1">
-              <p className="text-lg font-medium text-foreground mb-2">
-                "{currentPrompt.german}"
-              </p>
-              <p className="text-sm text-muted-foreground italic">
-                {currentPrompt.english}
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSpeak}
-              className="shrink-0"
-              title="Listen to pronunciation"
+      {/* Header */}
+      <div className="bg-card border-b border-border sticky top-0 z-10">
+        <div className="container max-w-2xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="gap-2"
+              onClick={onBack}
             >
-              <Volume2 className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4" />
+              {t('practice.back')}
+            </Button>
+            
+            <h2 className="text-lg font-serif font-semibold text-foreground">
+              {scenario.title}
+            </h2>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="gap-2 text-muted-foreground"
+              onClick={onComplete}
+            >
+              <SkipForward className="h-4 w-4" />
+              {t('practice.skip')}
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* Response Input */}
-        <div className="space-y-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4 text-center">
-              {t('practice.yourResponse')}
-            </h3>
-            <VoiceRecorder 
-              transcript={response}
-              onTranscriptChange={setResponse}
-            />
-          </div>
+      {/* Chat area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="container max-w-2xl mx-auto px-4 py-6 space-y-4">
+          {messages.map((msg) => {
+            if (msg.type === 'context') {
+              return (
+                <div 
+                  key={msg.id} 
+                  className="text-center py-4 animate-fade-in"
+                >
+                  <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">
+                    📍 {msg.german}
+                  </div>
+                </div>
+              );
+            }
+            
+            return (
+              <ChatBubble
+                key={msg.id}
+                message={msg.german}
+                translation={msg.english}
+                isUser={msg.type === 'user'}
+                showSpeaker={msg.type === 'prompt'}
+                className="animate-fade-in"
+              />
+            );
+          })}
+          <div ref={chatEndRef} />
+        </div>
+      </div>
 
-          {/* Submit Button */}
-          <Button
-            variant="hero"
-            size="lg"
-            className="w-full gap-2"
-            onClick={handleSubmit}
-            disabled={!response.trim()}
-          >
-            <Send className="h-4 w-4" />
-            {t('practice.submit')}
-          </Button>
+      {/* Input area */}
+      <div className="bg-background border-t border-border sticky bottom-0">
+        <div className="container max-w-2xl mx-auto px-4 py-4">
+          <ChatInput onSend={handleSend} />
         </div>
       </div>
     </div>
