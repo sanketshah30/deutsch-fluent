@@ -19,7 +19,7 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Set up environment variable
-export ANTHROPIC_API_KEY='your-api-key-here'  # Windows: set ANTHROPIC_API_KEY=your-api-key-here
+export GEMINI_API_KEY='your-api-key-here'  # Windows: set GEMINI_API_KEY=your-api-key-here
 
 # Run the app
 streamlit run app.py
@@ -48,7 +48,7 @@ streamlit run app.py
    - Click "Advanced settings"
    - Add secrets:
      ```toml
-     ANTHROPIC_API_KEY = "your-api-key-here"
+     GEMINI_API_KEY = "your-api-key-here"
      ```
    - Click "Deploy"
 
@@ -64,7 +64,7 @@ web: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
 **Deploy:**
 ```bash
 heroku create your-app-name
-heroku config:set ANTHROPIC_API_KEY='your-api-key-here'
+heroku config:set GEMINI_API_KEY='your-api-key-here'
 git push heroku main
 ```
 
@@ -99,22 +99,25 @@ german-practice-app/
 
 ### Environment Variables
 
-- `ANTHROPIC_API_KEY` (required) - Your Anthropic API key from https://console.anthropic.com/
+- `GEMINI_API_KEY` (required) - Your Google Gemini API key from https://aistudio.google.com/app/apikey
 
-### Getting an Anthropic API Key
+### Getting a Gemini API Key
 
-1. Go to https://console.anthropic.com/
-2. Sign up or log in
-3. Navigate to API Keys
-4. Create a new key
-5. Copy and use in your environment
+1. Go to https://aistudio.google.com/app/apikey
+2. Sign in with your Google account
+3. Click "Create API Key"
+4. Select a Google Cloud project (or create a new one)
+5. Copy the API key
+6. Use it in your environment
 
 ## Cost Estimates
 
-Using Claude Sonnet 4:
+Using Gemini 1.5 Flash (Free tier available):
+- **Free tier**: 15 requests per minute, 1,500 requests per day
+- **Paid tier**: $0.35 per 1 million input tokens
 - ~500 tokens per feedback request
-- ~$0.003 per practice session
-- 1000 practice sessions = ~$3
+- ~$0.0002 per practice session (essentially free for demos)
+- Free tier is MORE than enough for this demo!
 
 ## Customization
 
@@ -191,7 +194,7 @@ When recording your Loom demo (2-3 minutes):
 ## Tech Stack
 
 - **Frontend:** Streamlit (Python web framework)
-- **AI:** Anthropic Claude API (feedback generation)
+- **AI:** Google Gemini API (feedback generation)
 - **Audio:** audio-recorder-streamlit (voice recording)
 - **Deployment:** Streamlit Cloud (free hosting)
 
@@ -203,4 +206,4 @@ MIT License - Feel free to use for your demo and extend as needed.
 
 For issues or questions about this prototype, contact your development team or refer to:
 - Streamlit docs: https://docs.streamlit.io/
-- Anthropic docs: https://docs.anthropic.com/
+- Gemini API docs: https://ai.google.dev/docs

@@ -1,8 +1,9 @@
 import streamlit as st
-import anthropic
+import google.generativeai as genai
 from audio_recorder_streamlit import audio_recorder
 import os
 from datetime import datetime
+import json
 
 # Page config
 st.set_page_config(
@@ -26,6 +27,9 @@ if 'current_turn' not in st.session_state:
     st.session_state.current_turn = 0
 if 'conversation_history' not in st.session_state:
     st.session_state.conversation_history = []
+
+# Configure Gemini
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Scenarios data
 SCENARIOS = {
@@ -87,20 +91,19 @@ SCENARIOS = {
 }
 
 def get_ai_feedback(scenario_key, prompt, user_response, conversation_history=[]):
-    """Generate AI feedback using Claude API"""
+    """Generate AI feedback using Gemini API"""
     
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
-    
-    scenario = SCENARIOS[scenario_key]
-    
-    # Build conversation context
-    context_str = ""
-    if conversation_history:
-        context_str = "Previous conversation:\n"
-        for turn in conversation_history:
-            context_str += f"Prompt: {turn['prompt']}\nUser: {turn['response']}\n\n"
-    
-    system_prompt = f"""You are a German language tutor providing feedback on workplace conversation practice.
+    try:
+        scenario = SCENARIOS[scenario_key]
+        
+        # Build conversation context
+        context_str = ""
+        if conversation_history:
+            context_str = "Previous conversation:\n"
+            for turn in conversation_history:
+                context_str += f"Prompt: {turn['prompt']}\nUser: {turn['response']}\n\n"
+        
+        system_prompt = f"""You are a German language tutor providing feedback on workplace conversation practice.
 
 Scenario: {scenario['title']}
 Context: {scenario['context']}
@@ -130,28 +133,35 @@ Evaluate:
 
 Be encouraging but specific. Focus on practical improvements."""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=1000,
-        messages=[
-            {"role": "user", "content": system_prompt}
-        ]
-    )
-    
-    # Parse response
-    import json
-    try:
-        feedback = json.loads(message.content[0].text)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(system_prompt)
+        
+        # Extract JSON from response
+        response_text = response.text.strip()
+        
+        # Remove markdown code blocks if present
+        if response_text.startswith('```json'):
+            response_text = response_text[7:]
+        if response_text.startswith('```'):
+            response_text = response_text[3:]
+        if response_text.endswith('```'):
+            response_text = response_text[:-3]
+        
+        response_text = response_text.strip()
+        
+        feedback = json.loads(response_text)
         return feedback
-    except:
-        # Fallback if JSON parsing fails
+        
+    except Exception as e:
+        st.error(f"Error generating feedback: {str(e)}")
+        # Fallback feedback
         return {
             "relevance_score": 3,
             "transcript": user_response,
-            "what_worked": ["Sie haben geantwortet"],
+            "what_worked": ["Sie haben geantwortet", "Die Antwort ist verständlich"],
             "improvement": "Versuchen Sie, mehr Details hinzuzufügen",
             "suggested_response": "Eine natürlichere Antwort wäre hilfreich",
-            "score_explanation": "Feedback wird generiert..."
+            "score_explanation": "Gute Grundlage, aber es gibt Raum für Verbesserungen"
         }
 
 def landing_page():
