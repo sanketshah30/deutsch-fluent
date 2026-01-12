@@ -18,7 +18,7 @@ interface PracticeScreenProps {
 
 interface ChatMessage {
   id: string;
-  type: 'prompt' | 'user' | 'context';
+  type: 'prompt' | 'user';
   german: string;
   english?: string;
 }
@@ -30,20 +30,18 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const { addResponse } = useProgress();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const currentPrompt = scenario.prompts[currentPromptIndex];
 
-  // Initialize chat with context and first prompt
+  // Get translated content based on language
+  const scenarioTitle = language === 'en' ? scenario.titleEn : scenario.title;
+  const scenarioContext = language === 'en' ? scenario.contextEn : scenario.context;
+
+  // Initialize chat with first prompt
   useEffect(() => {
     setMessages([
-      {
-        id: 'context',
-        type: 'context',
-        german: scenario.context,
-        english: undefined,
-      },
       {
         id: currentPrompt.id,
         type: 'prompt',
@@ -95,12 +93,6 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
     // Reset to initial messages
     setMessages([
       {
-        id: 'context',
-        type: 'context',
-        german: scenario.context,
-        english: undefined,
-      },
-      {
         id: currentPrompt.id,
         type: 'prompt',
         german: currentPrompt.german,
@@ -128,7 +120,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
           </Button>
 
           <h2 className="text-2xl font-serif font-bold text-foreground mb-6">
-            {scenario.title}
+            {scenarioTitle}
           </h2>
 
           <FeedbackDisplay
@@ -161,7 +153,7 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
             </Button>
             
             <h2 className="text-lg font-serif font-semibold text-foreground">
-              {scenario.title}
+              {scenarioTitle}
             </h2>
             
             <Button 
@@ -177,34 +169,30 @@ export function PracticeScreen({ scenario, onBack, onComplete }: PracticeScreenP
         </div>
       </div>
 
+      {/* Context Banner */}
+      <div className="bg-primary/5 border-b border-primary/10">
+        <div className="container max-w-2xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-lg">📍</span>
+            <p className="text-foreground/80">{scenarioContext}</p>
+          </div>
+        </div>
+      </div>
+
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto">
         <div className="container max-w-2xl mx-auto px-4 py-6 space-y-4">
-          {messages.map((msg) => {
-            if (msg.type === 'context') {
-              return (
-                <div 
-                  key={msg.id} 
-                  className="text-center py-4 animate-fade-in"
-                >
-                  <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">
-                    📍 {msg.german}
-                  </div>
-                </div>
-              );
-            }
-            
-            return (
-              <ChatBubble
-                key={msg.id}
-                message={msg.german}
-                translation={msg.english}
-                isUser={msg.type === 'user'}
-                showSpeaker={msg.type === 'prompt'}
-                className="animate-fade-in"
-              />
-            );
-          })}
+          {messages.map((msg) => (
+            <ChatBubble
+              key={msg.id}
+              message={language === 'en' && msg.english ? msg.english : msg.german}
+              translation={language === 'en' ? msg.german : msg.english}
+              isUser={msg.type === 'user'}
+              showSpeaker={msg.type === 'prompt'}
+              originalGerman={msg.german}
+              className="animate-fade-in"
+            />
+          ))}
           <div ref={chatEndRef} />
         </div>
       </div>

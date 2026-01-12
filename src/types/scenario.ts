@@ -3,10 +3,12 @@ export interface Scenario {
   title: string;
   titleEn: string;
   description: string;
+  descriptionEn: string;
   icon: string;
   difficulty: 'Anfänger' | 'Fortgeschritten';
   formality: 'Sie' | 'Du';
   context: string;
+  contextEn: string;
   prompts: ScenarioPrompt[];
 }
 

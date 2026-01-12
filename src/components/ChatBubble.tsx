@@ -7,6 +7,7 @@ interface ChatBubbleProps {
   translation?: string;
   isUser?: boolean;
   showSpeaker?: boolean;
+  originalGerman?: string;
   className?: string;
 }
 
@@ -15,11 +16,14 @@ export function ChatBubble({
   translation, 
   isUser = false, 
   showSpeaker = false,
+  originalGerman,
   className 
 }: ChatBubbleProps) {
   const handleSpeak = () => {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(message);
+      // Always speak the German version for pronunciation practice
+      const textToSpeak = originalGerman || message;
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
       utterance.lang = 'de-DE';
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
