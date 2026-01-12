@@ -6,10 +6,12 @@ export const scenarios: Scenario[] = [
     title: 'Small Talk mit Kollegen',
     titleEn: 'Small talk with colleagues',
     description: 'Üben Sie informelle Gespräche in der Kaffeepause',
+    descriptionEn: 'Practice informal conversations during coffee break',
     icon: '☕',
     difficulty: 'Anfänger',
     formality: 'Du',
     context: 'Du bist in der Kaffeepause. Deine Kollegin Anna kommt zu dir...',
+    contextEn: 'You are on a coffee break. Your colleague Anna comes up to you...',
     prompts: [
       {
         id: 'st-1',
@@ -32,10 +34,12 @@ export const scenarios: Scenario[] = [
     title: 'Aufgabe erklären',
     titleEn: 'Explaining a task',
     description: 'Erklären Sie einem Kollegen eine Aufgabe',
+    descriptionEn: 'Explain a task to a colleague',
     icon: '📋',
     difficulty: 'Fortgeschritten',
     formality: 'Sie',
     context: 'Sie sind in einem Meeting. Ihr neuer Kollege Herr Müller bittet Sie um Hilfe bei einem Projekt...',
+    contextEn: 'You are in a meeting. Your new colleague Mr. Müller asks you for help with a project...',
     prompts: [
       {
         id: 'et-1',
@@ -51,10 +55,12 @@ export const scenarios: Scenario[] = [
     title: 'Frage beantworten',
     titleEn: 'Answering questions',
     description: 'Beantworten Sie Fragen Ihres Vorgesetzten',
+    descriptionEn: 'Answer questions from your supervisor',
     icon: '💬',
     difficulty: 'Fortgeschritten',
     formality: 'Sie',
     context: 'Sie sind im Büro. Ihre Chefin Frau Schmidt fragt Sie nach dem Projektfortschritt...',
+    contextEn: 'You are in the office. Your boss Mrs. Schmidt asks you about the project progress...',
     prompts: [
       {
         id: 'aq-1',
@@ -70,10 +76,12 @@ export const scenarios: Scenario[] = [
     title: 'Um Hilfe bitten',
     titleEn: 'Asking for help',
     description: 'Bitten Sie höflich um Unterstützung',
+    descriptionEn: 'Politely ask for support',
     icon: '🤝',
     difficulty: 'Anfänger',
     formality: 'Sie',
     context: 'Sie haben ein Problem mit Ihrem Computer. Ihr IT-Kollege Thomas geht gerade vorbei...',
+    contextEn: 'You have a problem with your computer. Your IT colleague Thomas is walking by...',
     prompts: [
       {
         id: 'ah-1',
@@ -89,10 +97,12 @@ export const scenarios: Scenario[] = [
     title: 'Sich vorstellen',
     titleEn: 'Introducing yourself',
     description: 'Stellen Sie sich am ersten Arbeitstag vor',
+    descriptionEn: 'Introduce yourself on your first day at work',
     icon: '👋',
     difficulty: 'Anfänger',
     formality: 'Sie',
     context: 'Es ist Ihr erster Tag im neuen Job. Ihr Teamleiter stellt Sie dem Team vor und jemand fragt...',
+    contextEn: 'It is your first day at your new job. Your team leader introduces you to the team and someone asks...',
     prompts: [
       {
         id: 'iy-1',

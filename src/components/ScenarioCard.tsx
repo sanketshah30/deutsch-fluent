@@ -1,4 +1,5 @@
 import { Scenario } from '@/types/scenario';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle2 } from 'lucide-react';
@@ -11,6 +12,17 @@ interface ScenarioCardProps {
 }
 
 export function ScenarioCard({ scenario, onClick, completed, score }: ScenarioCardProps) {
+  const { language } = useLanguage();
+  
+  const title = language === 'en' ? scenario.titleEn : scenario.title;
+  const description = language === 'en' ? scenario.descriptionEn : scenario.description;
+  const difficulty = language === 'en' 
+    ? (scenario.difficulty === 'Anfänger' ? 'Beginner' : 'Advanced')
+    : scenario.difficulty;
+  const formality = language === 'en'
+    ? (scenario.formality === 'Sie' ? 'Formal (Sie)' : 'Informal (Du)')
+    : scenario.formality;
+
   return (
     <Card 
       className="card-hover cursor-pointer border-border/50 bg-card hover:border-primary/30 group relative overflow-hidden"
@@ -30,18 +42,18 @@ export function ScenarioCard({ scenario, onClick, completed, score }: ScenarioCa
           
           <div className="flex-1 min-w-0">
             <h3 className="font-serif font-semibold text-lg text-foreground mb-1">
-              {scenario.title}
+              {title}
             </h3>
             <p className="text-sm text-muted-foreground mb-3">
-              {scenario.description}
+              {description}
             </p>
             
             <div className="flex flex-wrap gap-2">
               <Badge variant="difficulty">
-                {scenario.difficulty}
+                {difficulty}
               </Badge>
               <Badge variant="formality">
-                {scenario.formality}
+                {formality}
               </Badge>
               {score !== null && score !== undefined && (
                 <Badge variant="success">
